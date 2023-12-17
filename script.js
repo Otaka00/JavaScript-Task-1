@@ -1,8 +1,9 @@
 let level = 1;
-let differentLocations = []; // Use an array to store multiple different locations
 let identicalLocations = [];
+let differentLocation;
+
 function getRandomLocation() {
-    return Math.floor(Math.random() * 500 );
+    return Math.floor(Math.random() * 500);
 }
 
 function createImages() {
@@ -12,24 +13,24 @@ function createImages() {
     leftHalf.innerHTML = '';
     rightHalf.innerHTML = '';
 
-    // Generate random locations for identical images (left and right)
-    const identicalLocation = getRandomLocation();
-
-    differentLocations = [];
+    // Generate new random locations for different images
     identicalLocations = [];
     for (let i = 0; i < level; i++) {
-        differentLocations.push(getRandomLocation());
         identicalLocations.push(getRandomLocation());
     }
 
-    // Create different images at new random locations
-    for (const location of differentLocations) {
-        const imgRight1 = createImage("image.jpg", () => checkClick('right', location));
-        imgRight1.style.position = "absolute";
-        imgRight1.style.top = location + "px";
-        imgRight1.style.right = location + "px";
-        rightHalf.appendChild(imgRight1);
-    }
+    // Generate a new random location for the different image
+    differentLocation = getRandomLocation();
+
+    // Create different image at the new random location
+    const imgRight1 = createImage("image.jpg", () => checkClick('right', differentLocation));
+    imgRight1.style.position = "absolute";
+    imgRight1.style.top = differentLocation + "px";
+    imgRight1.style.right = differentLocation + "px";
+    imgRight1.style.bottom = differentLocation + "px";
+    rightHalf.appendChild(imgRight1);
+
+    // Create identical images at new random locations
     for (const location of identicalLocations) {
         const imgRight0 = createImage("image.jpg", () => checkClick('right', location));
         imgRight0.style.position = "absolute";
@@ -50,10 +51,11 @@ function createImage(src, clickHandler) {
     return img;
 }
 
-function checkClick(location, differentLoc) {
-    if (location === 'right' && differentLocations.includes(differentLoc)) {
+function checkClick(location, clickedLocation) {
+    if (location === 'right' && clickedLocation === differentLocation) {
         level++;
-        // alert(`You win, you've found the difference. Move to level ${level}!`);
+        console.log(differentLocation);
+        alert(`You win, you've found the difference. Move to level ${level}!`);
         createImages();
     } else {
         alert(`Game Over! You clicked on the identical image.`);
@@ -64,4 +66,3 @@ function checkClick(location, differentLoc) {
 
 // Initial setup
 createImages();
-
